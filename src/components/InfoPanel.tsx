@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import ClueTable from './ClueTable';
-import WordSearch from './WordSearch';
-
+import WordSearch from './WordSearchMode';
+import { searchWord } from '../utils/crossword';
+import FillMode from './FillMode';
 
 type InfoPanelMode =
     | "default"
+    | "fill"
     | "clues"
     | "wordsearch";
 
@@ -17,17 +19,7 @@ const InfoPanel = () => {
 
     const handleWordSearch = async (word: string) => {
         try {
-            // Convert the word pattern to a regex
-            // Replace spaces with dots and handle wildcards
-            const regexPattern = word.replace(/\s/g, '.').replace(/\?/g, '.');
-            const regex = new RegExp(`^${regexPattern}$`, 'i');
-
-            // Fetch the word dictionary
-            const response = await fetch('/words_dictionary.json');
-            const dictionary = await response.json();
-
-            // Filter words that match the regex
-            const matches = Object.keys(dictionary).filter(word => regex.test(word));
+            const matches = await searchWord(word);
             return matches;
         } catch (error) {
             console.error('Error searching dictionary:', error);
@@ -43,6 +35,9 @@ const InfoPanel = () => {
                     onClick={() => setMode("default")}
                 >
                     Default
+                </button>
+                <button className={buttonStyle} onClick={() => setMode("fill")}>
+                    Fill
                 </button>
                 <button
                     className={mode === "clues" ? buttonStyleActive : buttonStyle}
@@ -62,6 +57,9 @@ const InfoPanel = () => {
                     <h3>Default Mode</h3>
                     <p>This is the default mode where you can provide general information.</p>
                 </div>
+            )}
+            {mode === "fill" && (
+                <FillMode />
             )}
             {mode === "clues" && (
                 <ClueTable isCreating={true} />

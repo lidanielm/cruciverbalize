@@ -72,6 +72,13 @@ function Grid({ isCreating }: GridProps) {
             });
             setGrid(newGrid);
 
+            // update clue
+            const selectedClue = getSelectedClue();
+            if (selectedClue) {
+                selectedClue.answer = selectedClue.answer.replace(" ", e.key.toUpperCase());
+                setClues([...clues]);
+            }
+
             const nextCellLocation = moveSelection(currentDirection === "ArrowUp" || currentDirection === "ArrowDown" ? "ArrowDown" : "ArrowRight") || selectedCell;
             setSelectedCell(nextCellLocation);
         } else if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "ArrowLeft" || e.key === "ArrowRight") {
@@ -92,6 +99,13 @@ function Grid({ isCreating }: GridProps) {
             });
 
             setGrid(newGrid);
+
+            // update clue by replacing the letter with a space
+            const selectedClue = getSelectedClue();
+            if (selectedClue) {
+                selectedClue.answer = selectedClue.answer.replace(selectedClue.answer[selectedClue.answer.length - 1], " ");
+                setClues([...clues]);
+            }
 
             // const backwardDirection = currentDirection === "ArrowUp" ? "ArrowDown" : currentDirection === "ArrowDown" ? "ArrowUp" : currentDirection === "ArrowLeft" ? "ArrowRight" : "ArrowLeft";
             // const nextCellLocation = moveSelection(backwardDirection) || selectedCell;

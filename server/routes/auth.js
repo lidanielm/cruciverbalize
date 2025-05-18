@@ -11,14 +11,15 @@ router.post('/register', async (req, res) => {
     const { username, password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, password: hashedPassword });
     try {
         const savedUser = await User.create({ username, password: hashedPassword });
         const token = jwt.sign({ userId: savedUser._id, username: username }, process.env.JWT_SECRET, { expiresIn: '24h' });
         res.status(201).json({ token });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'User registration failed' });
     }
+    console.log(`User ${username} registered`);
 });
 
 router.post('/login', async (req, res) => {
@@ -33,6 +34,7 @@ router.post('/login', async (req, res) => {
     }
     const token = jwt.sign({ userId: user._id, username: username }, process.env.JWT_SECRET, { expiresIn: '24h' });
     res.json({ token });
+    console.log(`User ${username} logged in`);
 });
 
 export default router;

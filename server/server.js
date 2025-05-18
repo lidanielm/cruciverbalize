@@ -15,7 +15,10 @@ dotenv.config({ path: path.join(__dirname, 'config.env') });
 const PORT = process.env.PORT || 5050;
 const app = express();
 
-app.use(cors({origin: "https://spark-app-ealb.onrender.com"}));
+app.use(cors({
+    origin: [process.env.RENDER_URL, "http://localhost:5173"],
+    credentials: true
+}));
 app.use(express.json());
 
 app.use('/', crosswordRoutes);
