@@ -2,7 +2,7 @@ import { createContext } from 'react';
 
 export type ClueType = {
     number: number;
-    direction: string;
+    direction: "Across" | "Down";
     text: string;
     length: number;
     answer: string;
